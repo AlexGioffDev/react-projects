@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
-import { auth } from "./config/firebase";
+import { auth, getUserData } from "./config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { useStore } from "./store/store";
+
 import { AppRoutes } from "./routes/AppRoutes";
 const App: React.FC = () => {
-  const { setUser, theme, toogleTheme } = useStore();
+  const { setUser, theme } = useStore();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUser(user);
+        const userData = await getUserData(user);
+        if (userData) {
+          setUser(userData);
+        }
       } else {
         setUser(null);
       }
@@ -24,20 +28,12 @@ const App: React.FC = () => {
   }, [setUser]);
 
   return (
-    <div className={`${theme} `}>
-      <div className="bg-slate-800 dark:bg-slate-300 transition-all duration-300 ease-in">
-        <header>
-          <h1>Hello</h1>
-          <button onClick={toogleTheme}>
-            Toggle Theme ({theme === "light" ? "dark" : "light"})
-          </button>
-        </header>
+    <div className={`${theme} w-screen h-screen`}>
+      <div className="bg-slate-300 text-slate-950 w-full h-full">
         {loading && <p>Loading...</p>}
         {!loading && (
           <Router>
-            <div>
-              <AppRoutes />
-            </div>
+            <AppRoutes />
           </Router>
         )}
       </div>
