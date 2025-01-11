@@ -29,8 +29,8 @@ const App: React.FC = () => {
 
   return (
     <div className={`${theme} w-screen h-screen`}>
-      <div className="bg-slate-300 text-slate-950 w-full h-full">
-        {loading && <p>Loading...</p>}
+      <div className=" w-full h-full">
+        {loading && <p>make loading page</p>}
         {!loading && (
           <Router>
             <AppRoutes />

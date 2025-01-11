@@ -1,27 +1,78 @@
-import { signOut } from "firebase/auth";
-import { auth } from "../../config/firebase";
-import { useStore } from "../../store/store";
-
+import { useQueries } from "@tanstack/react-query";
+import {
+  fetchHorrorMovies,
+  fetchJapaneseMovies,
+  fetchPopularMovies,
+  fetchSCoreanMovies,
+  fetchUpcomingMovies,
+} from "../../queries/moviesQueries";
+import { Movie } from "../../types/types";
+import { MoviesScroll } from "../../components/MoviesScroll/MoviesScroll";
 export const Homepage = () => {
-  const { user, setUser, setError } = useStore();
+  const [
+    { data: trendingMovies, isLoading: isLoadingTrending },
+    { data: horrorMoviesData, isLoading: isLoadingHorror },
+    { data: japaneseMoviesData, isLoading: isLoadingJapanase },
+    { data: upcomingMoviesData, isLoading: isLoadingUpcoming },
+    { data: scoreanMoviesData, isLoading: isLoadingCorean },
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: ["popularMovies"],
+        queryFn: fetchPopularMovies,
+      },
+      {
+        queryKey: ["horrorMovies"],
+        queryFn: fetchHorrorMovies,
+      },
+      {
+        queryKey: ["japaneseMovies"],
+        queryFn: fetchJapaneseMovies,
+      },
+      {
+        queryKey: ["upcomingMovies"],
+        queryFn: fetchUpcomingMovies,
+      },
+      {
+        queryKey: ["koreanMovies"],
+        queryFn: fetchSCoreanMovies,
+      },
+    ],
+  });
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-    } catch {
-      setError("Error");
-    }
-  };
+  if (
+    isLoadingTrending ||
+    isLoadingHorror ||
+    isLoadingJapanase ||
+    isLoadingUpcoming ||
+    isLoadingCorean
+  )
+    return <div>here</div>;
 
+  const moviesPopular: Movie[] = trendingMovies?.results || [];
+  const horrorMovies: Movie[] = horrorMoviesData?.results || [];
+  const japaneseMovies: Movie[] = japaneseMoviesData?.results || [];
+  const upcomingMovies: Movie[] = upcomingMoviesData?.results || [];
+  const coreanMovies: Movie[] = scoreanMoviesData?.results || [];
   return (
-    <>
-      <p>Hello, {user?.username}</p>
-      <img
-        src={user?.avatarURL}
-        className="w-12 h-12 object-cover rounded-full"
+    <div className="px-4 py-4">
+      <MoviesScroll
+        movies={upcomingMovies}
+        title="Upcoming Movies"
+        type="upcoming"
       />
-      <button onClick={handleLogout}>Logout</button>
-    </>
+      <MoviesScroll
+        movies={moviesPopular}
+        title="Popular Movies"
+        type="popular"
+      />
+      <MoviesScroll movies={horrorMovies} title="Horror Movies" type="horror" />
+      <MoviesScroll
+        movies={japaneseMovies}
+        title="Japanese Movies"
+        type="japanese"
+      />
+      <MoviesScroll movies={coreanMovies} title="Corean Movies" type="corean" />
+    </div>
   );
 };
