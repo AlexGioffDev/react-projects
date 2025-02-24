@@ -56,23 +56,41 @@ export const Homepage = () => {
   const coreanMovies: Movie[] = scoreanMoviesData?.results || [];
   return (
     <div className="px-4 py-4">
-      <MoviesScroll
-        movies={upcomingMovies}
-        title="Upcoming Movies"
-        type="upcoming"
-      />
-      <MoviesScroll
-        movies={moviesPopular}
-        title="Popular Movies"
-        type="popular"
-      />
-      <MoviesScroll movies={horrorMovies} title="Horror Movies" type="horror" />
-      <MoviesScroll
-        movies={japaneseMovies}
-        title="Japanese Movies"
-        type="japanese"
-      />
-      <MoviesScroll movies={coreanMovies} title="Corean Movies" type="corean" />
+      {upcomingMovies.length > 0 && (
+        <MoviesScroll
+          movies={upcomingMovies}
+          title="Upcoming Movies"
+          type="upcoming"
+        />
+      )}
+      {moviesPopular.length > 0 && (
+        <MoviesScroll
+          movies={moviesPopular}
+          title="Popular Movies"
+          type="popular"
+        />
+      )}
+      {horrorMovies.length > 0 && (
+        <MoviesScroll
+          movies={horrorMovies}
+          title="Horror Movies"
+          type="horror"
+        />
+      )}
+      {japaneseMovies.length > 0 && (
+        <MoviesScroll
+          movies={japaneseMovies}
+          title="Japanese Movies"
+          type="japanese"
+        />
+      )}
+      {coreanMovies.length > 0 && (
+        <MoviesScroll
+          movies={coreanMovies}
+          title="Corean Movies"
+          type="corean"
+        />
+      )}
     </div>
   );
 };

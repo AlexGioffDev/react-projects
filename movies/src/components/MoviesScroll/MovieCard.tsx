@@ -20,7 +20,7 @@ export const MovieCard = ({ movie }: PropsPage) => {
       className={`min-w-[220px]  md:min-w-[200px] h-[200px] md:h-[118px] relative  rounded-sm cursor-pointer group`}
     >
       <div
-        className=" absolute inset-0 bg-cover bg-center "
+        className="absolute inset-0 bg-center bg-cover "
         style={{
           backgroundImage: `url(https://image.tmdb.org/t/p/w500${movie.backdrop_path})`,
         }}
@@ -34,7 +34,7 @@ export const MovieCard = ({ movie }: PropsPage) => {
         </p>
         <p className="text-[10px]">{movie.overview.slice(0, 80)}...</p>
         <Link
-          className="self-end  p-1 w-6 h-6 bg-slate-300 text-slate-900 rounded-full flex items-center justify-center"
+          className="flex items-center self-end justify-center w-6 h-6 p-1 rounded-full bg-slate-300 text-slate-900"
           to={`/movies/${movie.id}`}
         >
           &rarr;

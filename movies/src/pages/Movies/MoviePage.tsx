@@ -1,6 +1,9 @@
 import { useParams } from "react-router-dom";
 import { fetchMovieData } from "../../queries/movieQueries";
 import { useQuery } from "@tanstack/react-query";
+import { MovieSection } from "../../components/MovieSection/MovieSection";
+import { CastCard } from "../../components/CastCard/CastCard";
+import { DataValue } from "../../components/DataValue/DataValue";
 
 export const MoviePage = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,15 +13,17 @@ export const MoviePage = () => {
     queryFn: () => fetchMovieData(id!),
   });
 
+  console.log(data);
+
   return (
     <div
-      className="w-full h-full bg-cover bg-center relative overflow-hidden"
+      className="relative w-full h-full overflow-hidden bg-center bg-cover"
       style={{
         backgroundImage: `url(https://image.tmdb.org/t/p/original${data?.details.backdrop_path})`,
       }}
     >
-      <div className="w-full max-w-[1000px] mx-auto h-[85vh] p-8 space-y-5 z-[5] bg-black/80  my-2 overflow-y-auto">
-        <div className="flex gap-x-10  ">
+      <div className="w-full max-w-[1000px] mx-auto h-[85vh] p-8 space-y-5 z-[5] bg-black/80 border border-stone-100 rounded-md  my-2 overflow-y-auto">
+        <div className="flex gap-x-10 ">
           {/* Poster and info */}
           <div className="w-[450px] h-auto border border-slate-100 overflow-hidden rounded-lg">
             <img
@@ -28,42 +33,35 @@ export const MoviePage = () => {
           </div>
           <div className="p-4 w-[70%]">
             <ul className="space-y-2 ">
-              <li className="flex items-center justify-between">
-                <p>Title:</p>
+              <DataValue title="Title">
                 <p>{data?.details.title}</p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Original Title:</p>
+              <DataValue title="Original Title">
                 <p>{data?.details.original_title}</p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Original Language:</p>
-                <p>{data?.details.original_language}</p>
-              </li>
+              <DataValue title="Original Language">
+                <p className="uppercase">{data?.details.original_language}</p>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Duration:</p>
+              <DataValue title="Duration">
                 <p>{data?.details.runtime} min</p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Genres:</p>
+              <DataValue title="Genres">
                 <p className="space-x-2">
                   {data?.details.genres.slice(0, 4).map((genre) => (
                     <span key={genre.id}>{genre.name}</span>
                   ))}
                 </p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Vote:</p>
+              <DataValue title="Vote">
                 <p>{data?.details.vote_average.toFixed(2)}</p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Budget:</p>
+              <DataValue title="Budget">
                 <p>
                   {data?.details.budget
                     ? new Intl.NumberFormat("en-US", {
@@ -72,10 +70,9 @@ export const MoviePage = () => {
                       }).format(data.details.budget)
                     : "N/A"}
                 </p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Revenue:</p>
+              <DataValue title="Revenue">
                 <p>
                   {data?.details.revenue
                     ? new Intl.NumberFormat("en-US", {
@@ -84,10 +81,9 @@ export const MoviePage = () => {
                       }).format(data.details.revenue)
                     : "N/A"}
                 </p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Release Date:</p>
+              <DataValue title="Release Date">
                 <p>
                   {data?.details.release_date
                     ? (() => {
@@ -102,26 +98,24 @@ export const MoviePage = () => {
                       })()
                     : "N/A"}
                 </p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Origin Country:</p>
-                <p>{data?.details.origin_country.join(",")}</p>
-              </li>
+              <DataValue title="Origin Country">
+                <p>{data?.details.origin_country.slice(0, 7).join(",")}</p>
+              </DataValue>
+
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Production Countries:</p>
-                <p className="space-x-2">
+              <DataValue title="Production Countries">
+                <p className="space-x-2 overflow-x-auto text-sm ">
                   {data?.details.production_countries
                     .slice(0, 3)
                     .map((country) => (
                       <span key={country.iso_3166_1}>{country.name}</span>
                     ))}
                 </p>
-              </li>
+              </DataValue>
               <hr />
-              <li className="flex items-center justify-between">
-                <p>Production Companies:</p>
+              <DataValue title="Production Companies">
                 <p className="space-x-2">
                   {data?.details.production_companies
                     .slice(0, 2)
@@ -129,71 +123,85 @@ export const MoviePage = () => {
                       <span key={company.id}>{company.name.slice(0, 15)}</span>
                     ))}
                 </p>
-              </li>
+              </DataValue>
             </ul>
           </div>
         </div>
-        <div className="flex flex-col gap-y-2 p-2 ">
-          <h3 className=" border-b border-b-slate-100">Overview:</h3>
-          <p className="tracking-tight text-justify">
-            {data?.details.overview}
-          </p>
+        <div className="p-2 space-y-2">
+          <MovieSection title="Overview">
+            <p className="tracking-tight text-justify">
+              {data?.details.overview}
+            </p>
+          </MovieSection>
+          <hr />
 
-          <h3 className="font-bold uppercase text-xl">Cast</h3>
-          <div className="flex justify-between px-10 items-center h-[300px] overflow-y-auto flex-wrap gap-y-5 mx-auto w-[90%]">
-            {data?.credits.cast.map((member) => {
-              if (!member.profile_path) {
-                return null;
-              } // Salta membri senza immagine
-              return (
-                <div
-                  key={`movie-${data.credits.id}-cast-${member.id}`}
-                  className="basis-[40%] flex items-center  rounded-lg justify-between bg-gray-100 p-2"
-                >
-                  <img
-                    src={`https://image.tmdb.org/t/p/w400${member.profile_path}`}
-                    className="w-[100px] h-auto max-h-[100px] object-cover rounded-full border border-black"
-                    alt={member.name}
-                  />
-                  <div className="jusitfy-self-end text-black">
-                    <h2 className="text-[12px] text-right font-bold">
-                      {member.name}
-                    </h2>
-                    <h2 className="text-[10px] text-right">
-                      {member.character}
-                    </h2>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {data && data.credits.cast.length > 0 && (
+            <MovieSection title="Cast">
+              <div className="flex w-full overflow-x-auto overflow-y-auto gap-x-4 gap-y-5">
+                {data?.credits.cast.map((member) => {
+                  if (!member.profile_path || !member.character) {
+                    return null;
+                  }
+                  return (
+                    <CastCard
+                      key={`movie-${id}-cast-${member.character}-${member.id}`}
+                      people={member}
+                    />
+                  );
+                })}
+              </div>
+            </MovieSection>
+          )}
 
-          <h3 className="font-bold uppercase text-xl">Crew</h3>
-          <div className="flex justify-between px-10 items-center h-[300px] overflow-y-auto flex-wrap gap-y-5 mx-auto w-[90%]">
-            {data?.credits.crew.map((member) => {
-              if (!member.profile_path) {
-                return null;
-              } // Salta membri senza immagine
-              return (
-                <div
-                  key={`movie-${data.credits.id}-cast-${member.job}-${member.id}`}
-                  className="basis-[40%] flex items-center  rounded-lg justify-between bg-gray-100 p-2"
-                >
-                  <img
-                    src={`https://image.tmdb.org/t/p/w400${member.profile_path}`}
-                    className="w-[100px] h-auto max-h-[100px] object-cover rounded-full border border-black"
-                    alt={member.name}
-                  />
-                  <div className="jusitfy-self-end text-black">
-                    <h2 className="text-[12px] text-right font-bold">
-                      {member.name}
-                    </h2>
-                    <h2 className="text-[10px] text-right">{member.job}</h2>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {data && data.credits.crew.length > 0 && (
+            <MovieSection title="Crew">
+              <div className="flex w-full overflow-x-auto overflow-y-auto gap-x-4 gap-y-5">
+                {data?.credits.crew.map((member) => {
+                  if (!member.profile_path) {
+                    return null;
+                  }
+                  return (
+                    <CastCard
+                      key={`movie-${data.credits.id}-crew-${member.job}-${member.id}`}
+                      people={member}
+                    />
+                  );
+                })}
+              </div>
+            </MovieSection>
+          )}
+
+          {data && data.images.backdrops.length > 0 && (
+            <MovieSection title="Backdrops">
+              <div className="flex w-full overflow-x-auto gap-x-4">
+                {data?.images.backdrops.map((backdrop) => {
+                  return (
+                    <img
+                      key={`movie-backdrop-${backdrop.file_path}`}
+                      src={`https://image.tmdb.org/t/p/original${backdrop.file_path}`}
+                      className="w-[400px] h-[200px] object-cover border border-stone-100"
+                    />
+                  );
+                })}
+              </div>
+            </MovieSection>
+          )}
+
+          {data && data.images.posters.length > 0 && (
+            <MovieSection title="Posters">
+              <div className="flex w-full overflow-x-auto gap-x-4">
+                {data?.images.posters.map((poster) => {
+                  return (
+                    <img
+                      key={`movie-poster-${poster.file_path}`}
+                      src={`https://image.tmdb.org/t/p/original${poster.file_path}`}
+                      className=" w-[250px] h-[400px] object-cover border border-stone-100"
+                    />
+                  );
+                })}
+              </div>
+            </MovieSection>
+          )}
         </div>
       </div>
     </div>

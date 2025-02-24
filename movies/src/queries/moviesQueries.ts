@@ -54,7 +54,7 @@ const fetchPageDiscoverByCountry = async (
   const response = await fetch(
     `https://api.themoviedb.org/3/discover/movie?&api_key=${
       import.meta.env.VITE_TMDB_API_KEY
-    }&page=${page}&sort_by=vote_count.desc&with_origin_country=${country.toUpperCase()}&with_original_language=${language}`
+    }&page=${page}&with_origin_country=${country.toUpperCase()}&with_original_language=${language}`
   );
   if (!response.ok) {
     throw new Error("Failed to fetch popular Movies");
@@ -142,6 +142,7 @@ export const fetchHorrorMovies = async (): Promise<MoviesSearch> => {
         movie.backdrop_path !== "" &&
         movie.genre_ids.includes(27)
     );
+    console.log(data);
 
     allMovies = addUniqueMovies(validMovies, allMovies);
 
@@ -153,7 +154,6 @@ export const fetchHorrorMovies = async (): Promise<MoviesSearch> => {
   }
 
   allMovies = allMovies.slice(0, 15);
-
   return {
     results: allMovies,
     page: 1,

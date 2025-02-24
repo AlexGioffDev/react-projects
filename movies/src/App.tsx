@@ -29,7 +29,7 @@ const App: React.FC = () => {
 
   return (
     <div className={`${theme} w-screen h-screen`}>
-      <div className=" w-full h-full">
+      <div className="w-full h-full ">
         {loading && <p>make loading page</p>}
         {!loading && (
           <Router>

@@ -34,7 +34,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="px-8 py-4 bg-slate-800 flex items-center justify-between">
+    <header className="flex items-center justify-between px-8 py-4 bg-slate-800">
       <Link className="text-4xl font-bold uppercase text-slate-50" to="/">
         Movies
       </Link>
@@ -76,39 +76,51 @@ export const Header = () => {
             >
               <Link
                 to="/movies/country/es"
-                className="block px-4 py-2 rounded-md hover:bg-slate-200 text-slate-800 font-medium"
+                className="block px-4 py-2 font-medium rounded-md hover:bg-slate-200 text-slate-800"
               >
                 España
               </Link>
               <Link
                 to="/movies/country/us"
-                className="block px-4 py-2 rounded-md hover:bg-slate-200 text-slate-800 font-medium"
+                className="block px-4 py-2 font-medium rounded-md hover:bg-slate-200 text-slate-800"
               >
                 USA
               </Link>
               <Link
                 to="/movies/country/fr"
-                className="block px-4 py-2 rounded-md hover:bg-slate-200 text-slate-800 font-medium"
+                className="block px-4 py-2 font-medium rounded-md hover:bg-slate-200 text-slate-800"
               >
                 France
               </Link>
               <Link
+                to="/movies/country/it"
+                className="block px-4 py-2 font-medium rounded-md hover:bg-slate-200 text-slate-800"
+              >
+                Italy
+              </Link>
+              <Link
                 to="/movies/country/pt"
-                className="block px-4 py-2 rounded-md hover:bg-slate-200 text-slate-800 font-medium"
+                className="block px-4 py-2 font-medium rounded-md hover:bg-slate-200 text-slate-800"
               >
                 Portougal
               </Link>
               <Link
                 to="/movies/country/jp"
-                className="block px-4 py-2 rounded-md hover:bg-slate-200 text-slate-800 font-medium"
+                className="block px-4 py-2 font-medium rounded-md hover:bg-slate-200 text-slate-800"
               >
                 Japan
               </Link>
               <Link
                 to="/movies/country/cn"
-                className="block px-4 py-2 rounded-md hover:bg-slate-200 text-slate-800 font-medium"
+                className="block px-4 py-2 font-medium rounded-md hover:bg-slate-200 text-slate-800"
               >
                 China
+              </Link>
+              <Link
+                to="/movies/country/kr"
+                className="block px-4 py-2 font-medium rounded-md hover:bg-slate-200 text-slate-800"
+              >
+                South Korea
               </Link>
             </MenuDropDown>
           </div>
@@ -122,7 +134,7 @@ export const Header = () => {
             onClick={() => toggleMenu("profile")}
           >
             <img
-              className="w-8 h-8 rounded-full object-cover border border-slate-800"
+              className="object-cover w-8 h-8 border rounded-full border-slate-800"
               src={user?.avatarURL}
               alt={user?.username}
             />
