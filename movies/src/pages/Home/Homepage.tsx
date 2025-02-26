@@ -8,6 +8,7 @@ import {
 } from "../../queries/moviesQueries";
 import { Movie } from "../../types/types";
 import { MoviesScroll } from "../../components/MoviesScroll/MoviesScroll";
+import { LoadingComponent } from "../../components/Loading/LoadingComponents";
 export const Homepage = () => {
   const [
     { data: trendingMovies, isLoading: isLoadingTrending },
@@ -47,7 +48,11 @@ export const Homepage = () => {
     isLoadingUpcoming ||
     isLoadingCorean
   )
-    return <div>here</div>;
+    return (
+      <div className="w-full h-full">
+        <LoadingComponent />
+      </div>
+    );
 
   const moviesPopular: Movie[] = trendingMovies?.results || [];
   const horrorMovies: Movie[] = horrorMoviesData?.results || [];

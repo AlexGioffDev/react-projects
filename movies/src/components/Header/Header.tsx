@@ -1,11 +1,7 @@
-import { signOut } from "firebase/auth";
-import { useStore } from "../../store/store";
-import { auth } from "../../config/firebase";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { MenuDropDown } from "../MenuDropDown/MenuDropDown";
 export const Header = () => {
-  const { user, setUser, setError } = useStore();
   const [menusState, setMenusState] = useState<Record<string, boolean>>({});
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
@@ -21,16 +17,6 @@ export const Header = () => {
   const closeAllMenus = () => {
     setMenuIsOpen(false);
     setMenusState({});
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-      setError(null);
-    } catch {
-      setError("Error on the logout");
-    }
   };
 
   return (
@@ -123,33 +109,6 @@ export const Header = () => {
                 South Korea
               </Link>
             </MenuDropDown>
-          </div>
-        </div>
-
-        <div className="relative">
-          <button
-            className={`flex items-center gap-x-4 border border-slate-700 rounded-lg p-2 bg-slate-50 ${
-              menusState["profile"] ? "border-b-0 rounded-b-none" : ""
-            } transition-all duration-300 ease-in`}
-            onClick={() => toggleMenu("profile")}
-          >
-            <img
-              className="object-cover w-8 h-8 border rounded-full border-slate-800"
-              src={user?.avatarURL}
-              alt={user?.username}
-            />
-            <p>{user?.username}</p>
-          </button>
-          <div
-            className={`absolute w-full p-4 rounded-b-lg border bg-slate-50 border-slate-700 border-t-0 ${
-              menusState["profile"]
-                ? "h-auto z-20 opacity-100 top-11"
-                : "-z-10 opacity-0 h-0 -top-0"
-            } transition-all ease-in duration-300`}
-          >
-            <div>
-              <button onClick={handleLogout}>Logout</button>
-            </div>
           </div>
         </div>
       </div>

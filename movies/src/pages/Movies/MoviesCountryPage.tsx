@@ -1,12 +1,15 @@
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { fetchMoviesByCountry } from "../../queries/moviesQueries";
+import { motion } from "framer-motion";
+
 import { MovieCard } from "../../components/MoviesScroll/MovieCard";
-import { useRef, useEffect, useCallback, useState } from "react";
 
 export const MoviesCountryPage = () => {
   const { country } = useParams<{ country: string }>();
   const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const fetchMovies = async ({ pageParam }: { pageParam: number }) => {
     return await fetchMoviesByCountry(country!, pageParam);
@@ -41,14 +44,18 @@ export const MoviesCountryPage = () => {
       const [entry] = entries;
       if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
         setLoading(true);
-        setTimeout(() => {
-          fetchNextPage();
-          setLoading(false);
-        }, 2000);
+        fetchNextPage().finally(() => setLoading(false));
       }
     },
     [fetchNextPage, hasNextPage, isFetchingNextPage]
   );
+
+  useEffect(() => {
+    if (initialLoad && hasNextPage) {
+      fetchNextPage().then(() => fetchNextPage());
+      setInitialLoad(false);
+    }
+  }, [initialLoad, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
     if (loadMoreRef.current) {
@@ -78,17 +85,34 @@ export const MoviesCountryPage = () => {
   }
 
   return (
-    <div className="flex flex-wrap md:gap-x-2 gap-y-8 px-14 py-4">
+    <div className="flex flex-wrap py-4 md:gap-x-2 gap-y-8 px-14">
       {movies.map((movie) => (
         <MovieCard key={movie.id + "-" + country} movie={movie} />
       ))}
       <div
         ref={loadMoreRef}
         className={`w-full h-10 flex justify-center items-center ${
-          hasNextPage ? "" : "hidden"
+          hasNextPage && !initialLoad ? "" : "hidden"
         }`}
       >
-        {loading ? <p className="text-sm ">Loading more...</p> : null}
+        {loading
+          ? [0, 1, 2].map((index) => (
+              <motion.div
+                key={index}
+                className="w-4 h-4 mx-1 bg-white rounded-full"
+                animate={{
+                  y: [0, -10, 0],
+                  opacity: [0.3, 1, 0.3],
+                }}
+                transition={{
+                  duration: 0.9,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: index * 0.2, // Ritardo per creare il sequenziamento
+                }}
+              />
+            ))
+          : null}
       </div>
     </div>
   );
